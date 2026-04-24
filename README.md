@@ -48,4 +48,4 @@ Beta header pinned to `experimental-cc-routine-2026-04-01`. Two previous dated b
 
 ## License
 
-MIT
+Apache-2.0 — see [LICENSE](./LICENSE).
