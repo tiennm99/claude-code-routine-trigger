@@ -6,12 +6,30 @@ Schedule (UTC+7, `Asia/Ho_Chi_Minh`):
 
 | Local time | UTC cron      |
 | ---------- | ------------- |
+| 00:00      | `0 17 * * *`  |
 | 05:00      | `0 22 * * *`  |
 | 10:00      | `0 3 * * *`   |
 | 15:00      | `0 8 * * *`   |
 | 20:00      | `0 13 * * *`  |
 
 Manual `workflow_dispatch` is supported with an optional `text` input for ad-hoc runs.
+
+## Customize the schedule
+
+GitHub Actions requires the cron list to be **literal** in the workflow file — it cannot be read from secrets, repo variables, or inputs. To change when the routine fires, edit `.github/workflows/trigger-routine.yml` and update the `on.schedule` block:
+
+```yaml
+on:
+  schedule:
+    - cron: '0 17 * * *' # 00:00 UTC+7
+    # add / remove / edit these lines as needed
+```
+
+Tips:
+- Cron runs in **UTC**. Convert your local time: `UTC = local − offset` (e.g. 09:00 UTC+7 → 02:00 UTC → `0 2 * * *`).
+- Validate expressions at <https://crontab.guru/>.
+- Schedules only activate on the default branch after the file is pushed.
+- GitHub scheduled runs can lag 5–15 min under load; don't pack crons tightly.
 
 ## Setup
 

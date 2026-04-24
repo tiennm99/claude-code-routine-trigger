@@ -2,7 +2,9 @@ name: Trigger Claude Code Routine
 
 on:
   schedule:
-    # UTC+7 (Asia/Ho_Chi_Minh) → UTC
+    # Edit this list to change when the routine fires.
+    # Cron runs in UTC; comments show the UTC+7 (Asia/Ho_Chi_Minh) local time.
+    - cron: '0 17 * * *' # 00:00 UTC+7
     - cron: '0 22 * * *' # 05:00 UTC+7
     - cron: '0 3 * * *'  # 10:00 UTC+7
     - cron: '0 8 * * *'  # 15:00 UTC+7
