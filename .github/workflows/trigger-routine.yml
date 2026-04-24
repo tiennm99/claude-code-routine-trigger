@@ -1,0 +1,72 @@
+name: Trigger Claude Code Routine
+
+on:
+  schedule:
+    # UTC+7 (Asia/Ho_Chi_Minh) → UTC
+    - cron: '0 22 * * *' # 05:00 UTC+7
+    - cron: '0 3 * * *'  # 10:00 UTC+7
+    - cron: '0 8 * * *'  # 15:00 UTC+7
+    - cron: '0 13 * * *' # 20:00 UTC+7
+  workflow_dispatch:
+    inputs:
+      text:
+        description: 'Optional context text passed to the routine'
+        required: false
+        default: ''
+
+concurrency:
+  group: claude-code-routine-trigger
+  cancel-in-progress: false
+
+jobs:
+  fire:
+    name: Fire routine
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: POST /fire
+        env:
+          ROUTINE_FIRE_URL: ${{ secrets.ROUTINE_FIRE_URL }}
+          ROUTINE_FIRE_TOKEN: ${{ secrets.ROUTINE_FIRE_TOKEN }}
+          INPUT_TEXT: ${{ inputs.text }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${ROUTINE_FIRE_URL:-}" ] || [ -z "${ROUTINE_FIRE_TOKEN:-}" ]; then
+            echo "::error::Missing secrets ROUTINE_FIRE_URL and/or ROUTINE_FIRE_TOKEN"
+            exit 1
+          fi
+
+          LOCAL_NOW=$(TZ=Asia/Ho_Chi_Minh date '+%Y-%m-%d %H:%M %Z')
+          if [ -n "${INPUT_TEXT}" ]; then
+            TEXT="${INPUT_TEXT}"
+          else
+            TEXT="Scheduled trigger at ${LOCAL_NOW} (run ${GITHUB_RUN_ID})"
+          fi
+
+          PAYLOAD=$(jq -n --arg text "$TEXT" '{text: $text}')
+
+          RESPONSE=$(curl -sS -w "\n%{http_code}" -X POST "$ROUTINE_FIRE_URL" \
+            -H "Authorization: Bearer $ROUTINE_FIRE_TOKEN" \
+            -H "anthropic-version: 2023-06-01" \
+            -H "anthropic-beta: experimental-cc-routine-2026-04-01" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD")
+
+          HTTP_CODE=$(printf '%s' "$RESPONSE" | tail -n1)
+          BODY=$(printf '%s' "$RESPONSE" | sed '$d')
+
+          echo "HTTP ${HTTP_CODE}"
+          echo "${BODY}"
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::error::Routine fire failed with HTTP ${HTTP_CODE}"
+            exit 1
+          fi
+
+          SESSION_URL=$(printf '%s' "$BODY" | jq -r '.claude_code_session_url // empty')
+          if [ -n "$SESSION_URL" ]; then
+            echo "### Claude Code session" >> "$GITHUB_STEP_SUMMARY"
+            echo "- Triggered at: ${LOCAL_NOW}" >> "$GITHUB_STEP_SUMMARY"
+            echo "- Session: ${SESSION_URL}" >> "$GITHUB_STEP_SUMMARY"
+          fi
