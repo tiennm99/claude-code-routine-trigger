@@ -1,8 +1,10 @@
 # claude-code-routine-trigger
 
-GitHub Actions workflow that fires a [Claude Code routine](https://code.claude.com/docs/en/routines) four times a day via the [`/fire` API](https://platform.claude.com/docs/en/api/claude-code/routines-fire).
+Scheduled GitHub Actions workflow that fires a [Claude Code routine](https://code.claude.com/docs/en/routines) via the [`/fire` API](https://platform.claude.com/docs/en/api/claude-code/routines-fire). Ships with a 5×-daily default cron and exposes a `workflow_dispatch` button for on-demand runs. Fire URL and per-routine token live in repo secrets.
 
-Schedule (UTC+7, `Asia/Ho_Chi_Minh`):
+**Why:** GitHub cron is the cheapest way to run a Claude Code routine unattended on a schedule — no servers, no extra scheduler, no billable infra.
+
+Default schedule (UTC+7, `Asia/Ho_Chi_Minh`):
 
 | Local time | UTC cron      |
 | ---------- | ------------- |
@@ -12,7 +14,7 @@ Schedule (UTC+7, `Asia/Ho_Chi_Minh`):
 | 15:00      | `0 8 * * *`   |
 | 20:00      | `0 13 * * *`  |
 
-Manual `workflow_dispatch` is supported with an optional `text` input for ad-hoc runs.
+Manual `workflow_dispatch` is supported with an optional `text` input for ad-hoc runs. Customize the cron list to match your own cadence — see below.
 
 ## Customize the schedule
 
@@ -63,6 +65,16 @@ Beta header pinned to `experimental-cc-routine-2026-04-01`. Two previous dated b
 - Token is scoped to a single routine; a leak can only fire that one routine.
 - Each POST creates a new session (no idempotency). Avoid retry loops that would multiply sessions.
 - 429 responses include `Retry-After`; the workflow fails loud rather than retrying silently.
+
+## Use cases
+
+Anything a Claude Code routine already does, on a clock:
+- Daily repo triage (stale issues, dependabot PRs, unreviewed drafts).
+- Morning / evening digests written to a file in the routine's attached repo.
+- Scheduled codebase audits (unused exports, TODO sweep, lint drift).
+- Periodic doc freshness checks.
+
+For event-driven triggers (CI failure, webhook, alert) call `/fire` from the producing system directly — a cron scheduler isn't the right shape.
 
 ## License
 
