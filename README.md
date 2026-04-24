@@ -1,5 +1,10 @@
 # claude-code-routine-trigger
 
+> [!IMPORTANT]
+> **No longer used by the author.** Claude Code routines now ship with a **built-in cron trigger** in the routine editor — that's what I use now. Prefer the native scheduler; it runs on Anthropic's infra (no GitHub Actions delay/drop issues), needs no repo, no secrets, no workflow file.
+>
+> This repo is kept as a reference for anyone who still wants to fire routines from an external scheduler (GitHub Actions, own cron, Cloud Scheduler, etc.).
+
 Scheduled GitHub Actions workflow that fires a [Claude Code routine](https://code.claude.com/docs/en/routines) via the [`/fire` API](https://platform.claude.com/docs/en/api/claude-code/routines-fire). Ships with a 5×-daily default cron and exposes a `workflow_dispatch` button for on-demand runs. Fire URL and per-routine token live in repo secrets.
 
 **Why:** GitHub cron is the cheapest way to run a Claude Code routine unattended on a schedule — no servers, no extra scheduler, no billable infra.
@@ -31,7 +36,14 @@ Tips:
 - Cron runs in **UTC**. Convert your local time: `UTC = local − offset` (e.g. 09:00 UTC+7 → 02:00 UTC → `0 2 * * *`).
 - Validate expressions at <https://crontab.guru/>.
 - Schedules only activate on the default branch after the file is pushed.
-- GitHub scheduled runs can lag 5–15 min under load; don't pack crons tightly.
+- **Avoid minute `0`.** Pick scattered minutes like `7`, `13`, `23`, `37`, `47` — see the warning below.
+
+> [!WARNING]
+> **GitHub cron delays can be severe at minute `0`.** Top-of-the-hour is the most contested slot on GitHub's shared runners — scheduled jobs there are commonly delayed by 30 min – 2+ hours, and during high load GitHub may **drop the run entirely** (see [Actions docs](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#schedule)).
+>
+> Observed in this repo: a `0 13 * * *` cron fired at **14:46 UTC — 1h46m late** ([run 24895643143](https://github.com/tiennm99/claude-code-routine-trigger/actions/runs/24895643143)).
+>
+> The default schedule above still uses minute `0` for readability. If you care about timing, rewrite them — e.g. `7 17 * * *`, `13 22 * * *`, `19 3 * * *`, `23 8 * * *`, `37 13 * * *`. Do **not** rely on GitHub cron for precise timing; if you need it, trigger `/fire` from a real scheduler (own cron, Cloud Scheduler, etc.).
 
 ## Setup
 
@@ -61,7 +73,7 @@ Beta header pinned to `experimental-cc-routine-2026-04-01`. Two previous dated b
 
 ## Notes
 
-- GitHub cron runs can lag 5–15 min under load and are best-effort — acceptable for housekeeping-style routines, not for precise timing.
+- GitHub cron is best-effort: delays of 30+ minutes are common at minute `0`, and runs can be silently skipped under load. Acceptable for housekeeping-style routines, not for precise timing — see the warning in *Customize the schedule*.
 - Token is scoped to a single routine; a leak can only fire that one routine.
 - Each POST creates a new session (no idempotency). Avoid retry loops that would multiply sessions.
 - 429 responses include `Retry-After`; the workflow fails loud rather than retrying silently.
