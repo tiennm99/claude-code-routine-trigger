@@ -1,0 +1,14 @@
+# Build output
+/claude-code-routine-cron
+/dist/
+*.exe
+
+# Go test artifacts
+*.test
+*.out
+coverage.txt
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
