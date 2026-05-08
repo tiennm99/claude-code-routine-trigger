@@ -4,6 +4,8 @@
 > **No longer used by the author.** Claude Code routines now ship with a **built-in cron trigger** in the routine editor — that's what I use now. Prefer the native scheduler; it runs on Anthropic's infra (no GitHub Actions delay/drop issues), needs no repo, no secrets, no workflow file.
 >
 > This repo is kept as a reference for anyone who still wants to fire routines from an external scheduler (GitHub Actions, own cron, Cloud Scheduler, etc.).
+>
+> If you want **self-hosted scheduling with sub-second precision** (no GitHub cron delays/drops), see the sibling repo: [tiennm99/claude-code-routine-cron](https://github.com/tiennm99/claude-code-routine-cron) — Go daemon shipped as a multi-arch Docker image on GHCR.
 
 Scheduled GitHub Actions workflow that fires a [Claude Code routine](https://code.claude.com/docs/en/routines) via the [`/fire` API](https://platform.claude.com/docs/en/api/claude-code/routines-fire). Ships with a 5×-daily default cron and exposes a `workflow_dispatch` button for on-demand runs. Fire URL and per-routine token live in repo secrets.
 
