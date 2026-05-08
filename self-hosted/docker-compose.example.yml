@@ -1,0 +1,14 @@
+services:
+  claude-routine:
+    image: ghcr.io/tiennm99/claude-code-routine-cron:latest
+    restart: unless-stopped
+    environment:
+      ROUTINE_FIRE_URL: ${ROUTINE_FIRE_URL}
+      ROUTINE_FIRE_TOKEN: ${ROUTINE_FIRE_TOKEN}
+      CRON_SCHEDULE: |
+        0 9 * * *
+        0 18 * * *
+      TZ: Asia/Ho_Chi_Minh
+      LOG_LEVEL: info
+      # Optional: override the default text sent to the routine.
+      # TEXT_TEMPLATE: "Daily digest at {{.LocalTime}} (cron {{.Cron}})"
