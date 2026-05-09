@@ -135,7 +135,7 @@ The request pins `anthropic-beta: experimental-cc-routine-2026-04-01` (constant 
 
 - **Time accuracy**: cron precision on CF Workers is within ~15 seconds — adequate for routine triggering.
 - **No retry**: each `/fire` POST creates a new Claude Code session — retrying multiplies sessions and burns quota. The worker logs failures and moves on.
-- **Logs**: `wrangler tail` streams live; CF dashboard's "Logs" tab persists them per the observability tier.
+- **Logs / traces**: `[observability]` is enabled in `wrangler.toml` with `head_sampling_rate = 1` and `invocation_logs = true` — every invocation produces a structured log + trace, retained per the [Workers Logs retention policy](https://developers.cloudflare.com/workers/observability/logs/workers-logs/) (3 days on the free plan). View live with `npx wrangler tail`, or browse history in the CF dashboard under **Workers & Pages → your worker → Logs**.
 - **Cost**: scheduled handlers count against the Workers Free plan's 100k requests/day budget. 5 daily fires × 30 days = 150 requests/month — negligible.
 
 ## Security

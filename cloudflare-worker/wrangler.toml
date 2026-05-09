@@ -19,6 +19,14 @@ crons = [
   "0 0-17,22-23 * * *", # UTC+7: 00:00 + 05:00..23:00 hourly
 ]
 
-# Built-in observability (free tier supports basic logs).
+# Workers Logs / traces. `head_sampling_rate = 1` keeps 100% of invocations
+# (low volume here — ~20/day — so full retention is free). Drop to e.g. 0.1
+# if traffic ever grows enough to matter.
 [observability]
 enabled = true
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+invocation_logs = true

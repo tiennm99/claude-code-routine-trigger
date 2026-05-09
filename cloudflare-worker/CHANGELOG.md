@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Enable Workers Logs with `head_sampling_rate = 1` and `invocation_logs = true` — every cron tick produces a full trace, browsable in the CF dashboard for 3 days.
+
 ## [0.1.0] - 2026-05-09
 
 ### Added
