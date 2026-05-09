@@ -1,0 +1,19 @@
+{
+  "name": "claude-code-routine-trigger-worker",
+  "version": "0.0.0",
+  "description": "Cloudflare Workers cron port of claude-code-routine-cron — fires Claude Code routines on a schedule.",
+  "type": "module",
+  "private": true,
+  "license": "Apache-2.0",
+  "main": "worker.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0",
+    "vitest": "^2.0.0",
+    "@cloudflare/vitest-pool-workers": "^0.5.0"
+  }
+}
