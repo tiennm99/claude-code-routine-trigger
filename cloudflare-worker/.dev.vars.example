@@ -1,0 +1,4 @@
+# Copy this file to `.dev.vars` for `wrangler dev` local runs.
+# `.dev.vars` is gitignored. Real secrets go through `wrangler secret put` for production.
+ROUTINE_FIRE_URL=https://api.anthropic.com/v1/claude_code/routines/trig_REPLACE_ME/fire
+ROUTINE_FIRE_TOKEN=sk-ant-oat01-REPLACE_ME

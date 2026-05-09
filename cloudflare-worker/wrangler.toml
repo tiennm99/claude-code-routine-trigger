@@ -1,0 +1,29 @@
+name = "claude-code-routine-trigger-worker"
+main = "worker.js"
+compatibility_date = "2026-05-09"
+compatibility_flags = ["nodejs_compat"]
+
+# Plain (non-secret) vars. Override per-environment in the dashboard or via
+# `wrangler.toml` env blocks. Secrets go through `wrangler secret put`.
+[vars]
+TEXT_TEMPLATE = "Scheduled trigger at {LocalTime}"
+TZ = "Asia/Ho_Chi_Minh"
+
+# Cron triggers fire from this list. CF Workers requires literal cron
+# expressions here — they cannot be loaded from env vars or secrets.
+# Default schedule mirrors the sibling repos: 5x daily at UTC+7
+# 00:07 / 05:13 / 10:19 / 15:23 / 20:37 — minutes scattered to avoid
+# top-of-hour contention (good hygiene; CF cron is more reliable than GH).
+# Free tier allows up to 5 cron expressions per worker — at limit.
+[triggers]
+crons = [
+  "7 17 * * *",
+  "13 22 * * *",
+  "19 3 * * *",
+  "23 8 * * *",
+  "37 13 * * *",
+]
+
+# Built-in observability (free tier supports basic logs).
+[observability]
+enabled = true
