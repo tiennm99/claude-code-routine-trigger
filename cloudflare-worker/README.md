@@ -60,11 +60,7 @@ Edit `wrangler.toml` `[triggers].crons` — Cloudflare requires literal cron exp
 ```toml
 [triggers]
 crons = [
-  "0 17 * * *",          # 00:00 UTC+7  (17:00 UTC prev day)
-  "1 22,23,0,1,2 * * *", # 05:01-09:01 UTC+7
-  "2 3-7 * * *",         # 10:02-14:02 UTC+7
-  "3 8-12 * * *",        # 15:03-19:03 UTC+7
-  "4 13-16 * * *",       # 20:04-23:04 UTC+7
+  "0 0-17,22-23 * * *", # UTC+7: 00:00 + 05:00..23:00 hourly
 ]
 ```
 
@@ -73,8 +69,8 @@ Then redeploy: `npx wrangler deploy`.
 Tips:
 - Cron runs in **UTC**. Convert your local time: `UTC = local − offset` (e.g. 09:00 UTC+7 → 02:00 UTC → `0 2 * * *`).
 - Validate expressions at <https://crontab.guru/>.
-- **Free tier limit:** 5 cron expressions per worker. Default config uses all 5. Use comma lists (`1 22,23,0,1,2 * * *`) and ranges (`2 3-7 * * *`) to fit more fires per row.
-- Standard 5-field syntax — supports `*`, `,`, `-`, `/`. Use minute offsets (`:01`, `:02`, …) instead of `:00` to avoid top-of-hour contention on shared infra.
+- **Free tier limit:** 5 cron expressions per worker. Default config uses 1.
+- Standard 5-field syntax — supports `*`, `,`, `-`, `/`. Comma lists (`22,23,0,1,2`) and ranges (`3-7`) let you cram many fires into one expression.
 
 ## Templates
 

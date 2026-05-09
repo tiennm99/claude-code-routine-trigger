@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Cloudflare Workers `scheduled` handler that POSTs to the Claude Code routine `/fire` endpoint.
-- Default 20×daily cron at UTC+7 — 00:00 once, then hourly 05-09 / 10-14 / 15-19 / 20-23 with stepped minute offsets (:01-:04). Packed into 5 cron expressions to fit the CF free-tier limit.
+- Default 20×daily cron at UTC+7 — fires at 00:00 and hourly from 05:00 through 23:00. Single cron expression (`0 0-17,22-23 * * *`).
 - Token-substitution template with `{ISO}`, `{LocalTime}`, `{Cron}` (default: `Scheduled trigger at {LocalTime}`).
 - IANA timezone support via `TZ` env var (default: `UTC`).
 - Structured JSON logs for fire success / non-2xx / network failure.
