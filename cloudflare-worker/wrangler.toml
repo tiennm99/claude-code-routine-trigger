@@ -14,12 +14,18 @@ TZ = "Asia/Ho_Chi_Minh"
 #
 # DISABLED: this worker is parked. I migrated this routine to cron-job.org
 # to keep my CF cron-trigger quota free for other workers (see README).
-# To re-enable, uncomment the block below and `npx wrangler deploy`.
 #
-# [triggers]
-# crons = [
-#   "0 0-17,22-23 * * *", # UTC+7: 00:00 + 05:00..23:00 hourly
-# ]
+# `crons = []` (empty array) is REQUIRED to clear schedules from CF — just
+# omitting/commenting the block leaves stale entries in the dashboard,
+# because Wrangler only pushes what you declare.
+#
+# To re-enable: replace the empty array with your schedule (sample below)
+# and `npx wrangler deploy`.
+#   crons = [
+#     "0 0-17,22-23 * * *", # UTC+7: 00:00 + 05:00..23:00 hourly
+#   ]
+[triggers]
+crons = []
 
 # Workers Logs / traces. `head_sampling_rate = 1` keeps 100% of invocations
 # (low volume here — ~20/day — so full retention is free). Drop to e.g. 0.1
