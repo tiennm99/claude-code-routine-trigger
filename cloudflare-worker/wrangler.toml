@@ -11,17 +11,22 @@ TZ = "Asia/Ho_Chi_Minh"
 
 # Cron triggers fire from this list. CF Workers requires literal cron
 # expressions here — they cannot be loaded from env vars or secrets.
-# Default schedule mirrors the sibling repos: 5x daily at UTC+7
-# 00:07 / 05:13 / 10:19 / 15:23 / 20:37 — minutes scattered to avoid
-# top-of-hour contention (good hygiene; CF cron is more reliable than GH).
+# Schedule (Asia/Ho_Chi_Minh, UTC+7) — 20 fires/day, packed into 5 expressions:
+#   00:00         — once at local midnight
+#   05:01-09:01   — every hour, minute 01
+#   10:02-14:02   — every hour, minute 02
+#   15:03-19:03   — every hour, minute 03
+#   20:04-23:04   — every hour, minute 04
+# Crons evaluate in UTC, so each row is offset by -7 hours; the 05-09 row
+# wraps midnight UTC so it uses a comma list rather than a range.
 # Free tier allows up to 5 cron expressions per worker — at limit.
 [triggers]
 crons = [
-  "7 17 * * *",
-  "13 22 * * *",
-  "19 3 * * *",
-  "23 8 * * *",
-  "37 13 * * *",
+  "0 17 * * *",          # 00:00 UTC+7  (17:00 UTC prev day)
+  "1 22,23,0,1,2 * * *", # 05:01-09:01 UTC+7
+  "2 3-7 * * *",         # 10:02-14:02 UTC+7
+  "3 8-12 * * *",        # 15:03-19:03 UTC+7
+  "4 13-16 * * *",       # 20:04-23:04 UTC+7
 ]
 
 # Built-in observability (free tier supports basic logs).
