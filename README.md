@@ -7,6 +7,18 @@
 >
 > If you want **self-hosted scheduling with sub-second precision** (no GitHub cron delays/drops), see the sibling repo: [tiennm99/claude-code-routine-cron](https://github.com/tiennm99/claude-code-routine-cron) — Go daemon shipped as a multi-arch Docker image on GHCR.
 
+## Choose your deployment
+
+|                  | **claude-code-routine-trigger** (this) | [claude-code-routine-cron](https://github.com/tiennm99/claude-code-routine-cron) | [claude-code-routine-trigger-worker](https://github.com/tiennm99/claude-code-routine-trigger-worker) |
+| ---------------- | -------------------------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Runs on          | GitHub Actions runners                 | your infra (Docker, k8s, NAS, RPi)                                               | Cloudflare edge                                                                                      |
+| Cost             | free (within GitHub minutes)           | minimal (your infra)                                                             | free (CF free tier)                                                                                  |
+| Cron precision   | ±30 min – 2 h, can drop runs           | sub-second                                                                       | within ~15 sec                                                                                       |
+| Setup            | fork + 2 repo secrets                  | env vars + Docker                                                                | `wrangler deploy` + 2 secrets                                                                        |
+| Audit trail      | GitHub Actions runs page               | container stdout                                                                 | CF dashboard / `wrangler tail`                                                                       |
+
+Pick **this repo** if you want zero-infra and don't care about precise firing time. Pick **-cron** for behind-firewall / on-prem / precise timing. Pick **-worker** for edge-native deploys with CF dashboard observability.
+
 Scheduled GitHub Actions workflow that fires a [Claude Code routine](https://code.claude.com/docs/en/routines) via the [`/fire` API](https://platform.claude.com/docs/en/api/claude-code/routines-fire). Ships with a 5×-daily default cron and exposes a `workflow_dispatch` button for on-demand runs. Fire URL and per-routine token live in repo secrets.
 
 **Why:** GitHub cron is the cheapest way to run a Claude Code routine unattended on a schedule — no servers, no extra scheduler, no billable infra.
