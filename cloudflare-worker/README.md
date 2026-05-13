@@ -63,7 +63,7 @@ Each fire shows up in *History* with status code and response body — open `cla
 ```bash
 git clone https://github.com/tiennm99/claude-code-routine-trigger-worker
 cd claude-code-routine-trigger-worker
-npm install
+pnpm install
 
 # Upload secrets (from Anthropic routine editor → API trigger)
 echo -n 'https://api.anthropic.com/v1/claude_code/routines/trig_.../fire' \
@@ -153,7 +153,7 @@ curl "http://localhost:8787/__scheduled?cron=*+*+*+*+*"
 ### Tests
 
 ```bash
-npm test
+pnpm test
 ```
 
 Vitest runs in the Workers runtime via `@cloudflare/vitest-pool-workers`. Tests mock `fetch`, so they consume no Anthropic quota.
