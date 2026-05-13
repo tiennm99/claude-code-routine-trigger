@@ -12,6 +12,9 @@
     "deploy": "wrangler deploy",
     "test": "vitest run"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "sharp", "workerd"]
+  },
   "devDependencies": {
     "wrangler": "^4.0.0",
     "vitest": "^2.0.0",
