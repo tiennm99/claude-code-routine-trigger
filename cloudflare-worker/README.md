@@ -46,7 +46,7 @@ Each fire shows up in *History* with status code and response body — open `cla
 
 ## Why this vs the siblings
 
-|                  | [claude-code-routine-trigger](https://github.com/tiennm99/claude-code-routine-trigger) | [claude-code-routine-cron](https://github.com/tiennm99/claude-code-routine-cron) | **claude-code-routine-trigger-worker** (this) |
+|                  | [GitHub Actions](../) (repo root) | [`self-hosted/`](../self-hosted/) | **cloudflare-worker** (this directory) |
 | ---------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | --------------------------------------------- |
 | Runs on          | GitHub Actions runners                                                                 | your infra (Docker host, k8s, NAS, RPi)                                          | Cloudflare edge                               |
 | Cost             | free (within GitHub minutes)                                                           | minimal (your infra)                                                             | free (CF free tier)                           |
@@ -61,8 +61,8 @@ Each fire shows up in *History* with status code and response body — open `cla
 ### Quickstart
 
 ```bash
-git clone https://github.com/tiennm99/claude-code-routine-trigger-worker
-cd claude-code-routine-trigger-worker
+git clone https://github.com/tiennm99/claude-code-routine-trigger
+cd claude-code-routine-trigger/cloudflare-worker
 pnpm install
 
 # Upload secrets (from Anthropic routine editor → API trigger)

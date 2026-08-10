@@ -1,4 +1,4 @@
-module github.com/tiennm99/claude-code-routine-cron
+module github.com/tiennm99/claude-code-routine-trigger/self-hosted
 
 go 1.22
 

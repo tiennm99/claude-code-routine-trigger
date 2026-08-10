@@ -9,7 +9,7 @@ Self-hosted Go daemon that fires a [Claude Code routine](https://code.claude.com
 
 ## Why this vs `claude-code-routine-trigger`
 
-|                  | [claude-code-routine-trigger](https://github.com/tiennm99/claude-code-routine-trigger) | **claude-code-routine-cron** (this repo) |
+|                  | [GitHub Actions](../) (repo root) | **self-hosted** (this directory) |
 | ---------------- | -------------------------------------------------------------------------------------- | ---------------------------------------- |
 | Runs on          | GitHub Actions runners                                                                 | your infra (Docker host, k8s, NAS, RPi)  |
 | Cost             | free (within GitHub minutes)                                                           | minimal (your infra)                     |
@@ -113,10 +113,10 @@ The request pins `anthropic-beta: experimental-cc-routine-2026-04-01`. When Anth
 ## Build from source
 
 ```bash
-git clone https://github.com/tiennm99/claude-code-routine-cron
-cd claude-code-routine-cron
+git clone https://github.com/tiennm99/claude-code-routine-trigger
+cd claude-code-routine-trigger/self-hosted
 go build .
-./claude-code-routine-cron     # uses env vars from your shell
+./self-hosted                  # uses env vars from your shell
 ```
 
 Tests:
