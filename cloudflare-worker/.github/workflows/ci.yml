@@ -10,13 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
           node-version: '24'
-          cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm test
-      - run: pnpm exec wrangler deploy --dry-run
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test
+      - run: npx wrangler deploy --dry-run
         env:
           CLOUDFLARE_API_TOKEN: dummy
